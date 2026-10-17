@@ -1,0 +1,6 @@
+{
+  "name": "NAVAI - Conversational Transit Navigation",
+  "description": "Conversational indoor navigation for KSR Bengaluru Railway Station powered by Gemini Live API voice wayfinding, verified topological routing, and blueprint extraction.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
