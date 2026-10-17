@@ -6,20 +6,19 @@
 import React, { useState, useMemo } from 'react';
 import { PointOfInterest, POICategory } from '../types/navigation';
 import {
+  Accessibility,
+  Briefcase,
+  Building2,
+  ChevronRight,
+  Coffee,
+  MapPin,
   Search,
+  Shield,
+  ShoppingBag,
+  Ticket,
   Train,
   Utensils,
-  Briefcase,
-  Ticket,
-  MapPin,
-  ChevronRight,
-  Accessibility,
-  Building2,
-  ShoppingBag,
-  Shield,
-  Coffee,
-  Cross,
-  Filter,
+  Lightbulb,
 } from 'lucide-react';
 
 interface StationDirectoryProps {
@@ -34,18 +33,31 @@ export const StationDirectory: React.FC<StationDirectoryProps> = ({ pois, onSele
 
   const platforms = useMemo(() => {
     return [
-      { id: 'all', label: 'All Platforms & Zones' },
+      { id: 'all', label: 'All zones' },
       { id: 'Platform 1', label: 'Platform 1' },
       { id: 'Platforms 2 & 3', label: 'Platforms 2 & 3' },
       { id: 'Platform 4', label: 'Platform 4' },
       { id: 'Platforms 5 & 6', label: 'Platforms 5 & 6' },
-      { id: 'Platforms 7 & 8', label: 'Platforms 7 & 8 (Vande Bharat)' },
-      { id: 'Platforms 9 & 10', label: 'Platforms 9 & 10 (Metro Link)' },
+      { id: 'Platforms 7 & 8', label: 'Platforms 7 & 8' },
+      { id: 'Platforms 9 & 10', label: 'Platforms 9 & 10' },
       { id: 'Terminal 1', label: 'Terminal 1' },
       { id: 'Terminal 2', label: 'Terminal 2' },
       { id: 'Terminal 3', label: 'Terminal 3' },
     ];
   }, []);
+
+  const categories: { id: string; label: string }[] = [
+    { id: 'all', label: 'All' },
+    { id: 'shopping', label: 'Shops' },
+    { id: 'food', label: 'Food' },
+    { id: 'waiting', label: 'Lounges' },
+    { id: 'ticketing', label: 'Tickets' },
+    { id: 'amenity', label: 'Services' },
+    { id: 'transit', label: 'Transit' },
+    { id: 'office', label: 'Staff' },
+    { id: 'platform', label: 'Platforms' },
+    { id: 'exit', label: 'Terminals' },
+  ];
 
   const filteredPois = useMemo(() => {
     return pois.filter((poi) => {
@@ -68,71 +80,55 @@ export const StationDirectory: React.FC<StationDirectoryProps> = ({ pois, onSele
     });
   }, [pois, searchQuery, selectedCategory, selectedPlatform]);
 
-  const getCategoryIcon = (category: POICategory) => {
-    switch (category) {
-      case 'platform':
-        return <Train className="w-4 h-4 text-blue-600" />;
-      case 'food':
-        return <Utensils className="w-4 h-4 text-amber-600" />;
-      case 'shopping':
-        return <ShoppingBag className="w-4 h-4 text-purple-600" />;
-      case 'amenity':
-        return <Briefcase className="w-4 h-4 text-cyan-600" />;
-      case 'ticketing':
-        return <Ticket className="w-4 h-4 text-emerald-600" />;
-      case 'transit':
-        return <Train className="w-4 h-4 text-indigo-600" />;
-      case 'waiting':
-        return <Coffee className="w-4 h-4 text-amber-700" />;
-      case 'office':
-        return <Shield className="w-4 h-4 text-slate-700" />;
-      case 'exit':
-        return <Building2 className="w-4 h-4 text-rose-600" />;
-      default:
-        return <MapPin className="w-4 h-4 text-slate-500" />;
-    }
+  const categoryStyles: Record<POICategory, { icon: React.ReactNode; bg: string }> = {
+    platform: { icon: <Train className="h-4 w-4 text-blue-700" />, bg: 'bg-blue-50' },
+    food: { icon: <Utensils className="h-4 w-4 text-amber-700" />, bg: 'bg-amber-50' },
+    shopping: { icon: <ShoppingBag className="h-4 w-4 text-cyan-700" />, bg: 'bg-cyan-50' },
+    amenity: { icon: <Briefcase className="h-4 w-4 text-emerald-700" />, bg: 'bg-emerald-50' },
+    ticketing: { icon: <Ticket className="h-4 w-4 text-blue-700" />, bg: 'bg-blue-50' },
+    transit: { icon: <Train className="h-4 w-4 text-cyan-700" />, bg: 'bg-cyan-50' },
+    waiting: { icon: <Coffee className="h-4 w-4 text-amber-700" />, bg: 'bg-amber-50' },
+    office: { icon: <Shield className="h-4 w-4 text-slate-700" />, bg: 'bg-slate-100' },
+    exit: { icon: <Building2 className="h-4 w-4 text-rose-700" />, bg: 'bg-rose-50' },
   };
 
+  const getCategoryStyle = (category: POICategory) =>
+    categoryStyles[category] ?? { icon: <MapPin className="h-4 w-4 text-slate-600" />, bg: 'bg-slate-100' };
+
   return (
-    <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm flex flex-col h-full text-slate-800">
-      <div className="flex items-center justify-between mb-3">
+    <div className="flex h-full flex-col rounded-[1.75rem] border border-slate-200 bg-white p-5 text-[#10213f] shadow-sm">
+      <div className="mb-4 flex items-start justify-between gap-3">
         <div>
-          <div className="flex items-center gap-2">
-            <h3 className="text-base font-extrabold text-slate-900 tracking-tight">
-              KSR Station Landmark Directory
-            </h3>
-            <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-800">
-              {filteredPois.length} Found
-            </span>
-          </div>
-          <p className="text-xs text-slate-500 font-medium">
-            Over 75 verified landmarks: shops, stalls, waiting halls, offices, and amenities
+          <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-500">Station directory</p>
+          <h3 className="mt-1 text-lg font-extrabold tracking-tight text-[#10213f]">KSR landmarks</h3>
+          <p className="mt-0.5 text-xs font-medium text-slate-500">
+            {filteredPois.length} of {pois.length} verified landmarks shown
           </p>
         </div>
       </div>
 
-      {/* Search Input */}
       <div className="relative mb-3">
-        <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
+        <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
         <input
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search by name, platform, shop or item (e.g. 'Jan Aushadhi', 'PF 1', 'Nandini', 'Dosa', 'Toy')..."
-          className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white shadow-xs"
+          aria-label="Search station landmarks"
+          placeholder="Search shops, food, services..."
+          className="min-h-11 w-full rounded-xl border border-slate-200 bg-slate-50 pl-9 pr-3 text-xs font-medium text-slate-900 placeholder-slate-400 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-100"
         />
       </div>
 
-      {/* Platform Tabs Filter */}
-      <div className="flex items-center gap-1.5 overflow-x-auto pb-2 mb-2 no-scrollbar">
+      <div className="mb-2 flex items-center gap-1.5 overflow-x-auto pb-2">
         {platforms.map((p) => (
           <button
             key={p.id}
             onClick={() => setSelectedPlatform(p.id)}
-            className={`px-2.5 py-1 text-[11px] font-bold rounded-lg whitespace-nowrap transition-colors cursor-pointer ${
+            aria-pressed={selectedPlatform === p.id}
+            className={`min-h-9 whitespace-nowrap rounded-full px-3 text-[11px] font-bold transition ${
               selectedPlatform === p.id
-                ? 'bg-slate-900 text-white shadow-xs'
-                : 'bg-slate-100 text-slate-600 hover:text-slate-900 hover:bg-slate-200'
+                ? 'bg-blue-700 text-white shadow-sm'
+                : 'bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900'
             }`}
           >
             {p.label}
@@ -140,27 +136,16 @@ export const StationDirectory: React.FC<StationDirectoryProps> = ({ pois, onSele
         ))}
       </div>
 
-      {/* Category Filter Controls */}
-      <div className="flex items-center gap-1.5 overflow-x-auto pb-2 mb-3 no-scrollbar">
-        {[
-          { id: 'all', label: 'All Categories' },
-          { id: 'shopping', label: '🛍️ Shops & Retail' },
-          { id: 'food', label: '🍛 Food & Dining' },
-          { id: 'waiting', label: '🛋️ Lounges & Waiting' },
-          { id: 'ticketing', label: '🎟️ Tickets & Booking' },
-          { id: 'amenity', label: '🧳 Medical & Services' },
-          { id: 'transit', label: '🚇 Transit & Parking' },
-          { id: 'office', label: '👮 Staff & Police' },
-          { id: 'platform', label: '🚆 Platforms' },
-          { id: 'exit', label: '🏛️ Terminals' },
-        ].map((cat) => (
+      <div className="mb-3 flex items-center gap-1.5 overflow-x-auto pb-1">
+        {categories.map((cat) => (
           <button
             key={cat.id}
             onClick={() => setSelectedCategory(cat.id)}
-            className={`px-3 py-1.5 text-xs font-semibold rounded-xl whitespace-nowrap transition-colors cursor-pointer ${
+            aria-pressed={selectedCategory === cat.id}
+            className={`min-h-9 whitespace-nowrap rounded-full px-3 text-[11px] font-bold transition ${
               selectedCategory === cat.id
-                ? 'bg-blue-600 text-white font-bold shadow-xs'
-                : 'bg-slate-100 text-slate-600 hover:text-slate-900 hover:bg-slate-200'
+                ? 'bg-[#10213f] text-white shadow-sm'
+                : 'border border-slate-200 bg-white text-slate-600 hover:border-blue-200 hover:text-blue-700'
             }`}
           >
             {cat.label}
@@ -168,60 +153,66 @@ export const StationDirectory: React.FC<StationDirectoryProps> = ({ pois, onSele
         ))}
       </div>
 
-      {/* POI List */}
-      <div className="flex-1 overflow-y-auto space-y-2.5 pr-1">
-        {filteredPois.map((poi) => (
-          <div
-            key={poi.id}
-            onClick={() => onSelectPOI(poi.nodeId)}
-            className="p-3.5 bg-slate-50/70 hover:bg-white border border-slate-200 hover:border-blue-400 hover:shadow-sm rounded-2xl cursor-pointer transition-all flex items-center justify-between group"
-          >
-            <div className="flex items-start gap-3 flex-1 min-w-0 pr-2">
-              <div className="p-2 rounded-xl bg-white border border-slate-200 shadow-xs shrink-0 mt-0.5">
-                {getCategoryIcon(poi.category)}
-              </div>
-              <div className="min-w-0">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <h4 className="text-xs sm:text-sm font-bold text-slate-900 group-hover:text-blue-700 transition-colors truncate">
-                    {poi.name}
-                  </h4>
+      <div className="flex-1 space-y-2 overflow-y-auto pr-1">
+        {filteredPois.map((poi) => {
+          const style = getCategoryStyle(poi.category);
+          return (
+            <button
+              key={poi.id}
+              onClick={() => onSelectPOI(poi.nodeId)}
+              className="group flex w-full items-center gap-3 rounded-2xl border border-slate-200 bg-white p-3 text-left transition hover:border-blue-200 hover:shadow-md"
+            >
+              <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${style.bg}`}>
+                {style.icon}
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="flex items-center gap-2">
+                  <span className="truncate text-sm font-bold text-[#10213f] group-hover:text-blue-700">{poi.name}</span>
                   {poi.platform && (
-                    <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-md bg-slate-200/80 text-slate-700">
+                    <span className="shrink-0 rounded-md bg-slate-100 px-1.5 py-0.5 font-mono text-[10px] font-bold text-slate-600">
                       {poi.platform}
                     </span>
                   )}
                   {poi.accessible && (
-                    <span title="Step-free wheelchair accessible">
-                      <Accessibility className="w-3.5 h-3.5 text-emerald-600" />
-                    </span>
+                    <Accessibility className="h-3.5 w-3.5 shrink-0 text-emerald-600" aria-label="Step-free access" />
                   )}
-                </div>
-
-                {/* Clean unboxed metadata with typographic separators */}
-                <div className="flex items-center gap-2 text-[11px] text-slate-500 font-medium mt-0.5">
+                </span>
+                <span className="mt-0.5 flex items-center gap-1.5 text-[11px] font-medium text-slate-500">
                   <span className="capitalize">{poi.category}</span>
                   <span aria-hidden="true">·</span>
                   <span className="truncate">{poi.description}</span>
-                </div>
-
+                </span>
                 {poi.specialTip && (
-                  <p className="text-[11px] text-amber-800 bg-amber-50 border border-amber-200/70 rounded-lg px-2 py-1 font-medium mt-1.5 inline-block">
-                    💡 {poi.specialTip}
-                  </p>
+                  <span className="mt-1.5 flex items-start gap-1 rounded-lg bg-amber-50 px-2 py-1 text-[11px] font-medium text-amber-900">
+                    <Lightbulb className="mt-0.5 h-3 w-3 shrink-0 text-amber-600" />
+                    {poi.specialTip}
+                  </span>
                 )}
-              </div>
-            </div>
-
-            <div className="shrink-0 flex items-center gap-1 text-xs text-blue-600 font-bold">
-              <span className="hidden sm:inline">Route</span>
-              <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </div>
-          </div>
-        ))}
+              </span>
+              <span className="flex shrink-0 items-center gap-1 text-xs font-bold text-blue-700">
+                <span className="hidden sm:inline">Route</span>
+                <ChevronRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
+              </span>
+            </button>
+          );
+        })}
 
         {filteredPois.length === 0 && (
-          <div className="text-center py-10 text-xs text-slate-500 font-medium">
-            No matching landmarks found for "{searchQuery}" under the selected platform/category.
+          <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 py-10 text-center">
+            <MapPin className="mx-auto h-6 w-6 text-slate-400" />
+            <p className="mt-2 text-xs font-semibold text-slate-500">
+              No landmarks match “{searchQuery}” with the current filters.
+            </p>
+            <button
+              onClick={() => {
+                setSearchQuery('');
+                setSelectedCategory('all');
+                setSelectedPlatform('all');
+              }}
+              className="mt-3 min-h-11 rounded-xl bg-blue-700 px-4 text-xs font-bold text-white transition hover:bg-blue-800"
+            >
+              Clear filters
+            </button>
           </div>
         )}
       </div>

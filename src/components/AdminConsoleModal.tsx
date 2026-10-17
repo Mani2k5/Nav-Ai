@@ -103,65 +103,68 @@ export const AdminConsoleModal: React.FC<AdminConsoleModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs">
-      <div className="w-full max-w-4xl max-h-[90vh] bg-white border border-slate-200 rounded-2xl shadow-2xl flex flex-col overflow-hidden text-slate-800">
-        {/* Header in White Theme */}
-        <div className="flex items-center justify-between px-6 py-4 bg-slate-50 border-b border-slate-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#10213f]/60 backdrop-blur-xs">
+      <div className="w-full max-w-4xl max-h-[90vh] bg-white border border-slate-200 rounded-[1.75rem] shadow-2xl flex flex-col overflow-hidden text-slate-800">
+        {/* Header */}
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200">
           <div className="flex items-center gap-2.5">
-            <Sliders className="w-5 h-5 text-blue-600" />
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-700 shadow-sm">
+              <Sliders className="h-5 w-5 text-white" />
+            </div>
             <div>
-              <h2 className="text-base font-bold text-slate-900 leading-tight">
+              <h2 className="text-base font-extrabold tracking-tight text-[#10213f] leading-tight">
                 Venue Operator Admin Console
               </h2>
               <p className="text-xs text-slate-500 font-medium">
-                KSR Bengaluru Verified Graph & AI Blueprint Extractor
+                KSR Bengaluru Verified Graph &amp; AI Blueprint Extractor
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 text-slate-400 hover:text-slate-800 rounded-lg hover:bg-slate-200 transition-colors cursor-pointer"
+            aria-label="Close admin console"
+            className="flex min-h-9 min-w-9 items-center justify-center rounded-xl text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition"
           >
-            <X className="w-5 h-5" />
+            <X className="h-5 w-5" />
           </button>
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex items-center gap-2 px-6 pt-3 bg-white border-b border-slate-200">
+        <div className="flex items-center gap-1 px-4 sm:px-6 pt-3 border-b border-slate-200 overflow-x-auto">
           <button
             onClick={() => setActiveTab('blueprint')}
-            className={`pb-2.5 px-3 text-xs font-bold border-b-2 flex items-center gap-1.5 transition-colors cursor-pointer ${
+            className={`pb-2.5 px-3 text-xs font-bold border-b-2 whitespace-nowrap flex items-center gap-1.5 transition-colors ${
               activeTab === 'blueprint'
-                ? 'border-blue-600 text-blue-600'
+                ? 'border-blue-700 text-blue-700'
                 : 'border-transparent text-slate-500 hover:text-slate-800'
             }`}
           >
-            <Sparkles className="w-4 h-4 text-amber-500" />
-            AI Blueprint Extractor
+            <Sparkles className="h-4 w-4 text-amber-500" />
+            Blueprint Extractor
           </button>
 
           <button
             onClick={() => setActiveTab('closures')}
-            className={`pb-2.5 px-3 text-xs font-bold border-b-2 flex items-center gap-1.5 transition-colors cursor-pointer ${
+            className={`pb-2.5 px-3 text-xs font-bold border-b-2 whitespace-nowrap flex items-center gap-1.5 transition-colors ${
               activeTab === 'closures'
-                ? 'border-blue-600 text-blue-600'
+                ? 'border-blue-700 text-blue-700'
                 : 'border-transparent text-slate-500 hover:text-slate-800'
             }`}
           >
-            <AlertTriangle className="w-4 h-4 text-amber-500" />
-            Closures & Maintenance ({Object.keys(stationData.closures).length})
+            <AlertTriangle className="h-4 w-4 text-amber-500" />
+            Closures ({Object.keys(stationData.closures).length})
           </button>
 
           <button
             onClick={() => setActiveTab('graph')}
-            className={`pb-2.5 px-3 text-xs font-bold border-b-2 flex items-center gap-1.5 transition-colors cursor-pointer ${
+            className={`pb-2.5 px-3 text-xs font-bold border-b-2 whitespace-nowrap flex items-center gap-1.5 transition-colors ${
               activeTab === 'graph'
-                ? 'border-blue-600 text-blue-600'
+                ? 'border-blue-700 text-blue-700'
                 : 'border-transparent text-slate-500 hover:text-slate-800'
             }`}
           >
-            <Layers className="w-4 h-4" />
-            Graph Overview ({stationData.nodes.length} nodes · {stationData.edges.length} edges)
+            <Layers className="h-4 w-4" />
+            Graph ({stationData.nodes.length} · {stationData.edges.length})
           </button>
         </div>
 
@@ -170,9 +173,9 @@ export const AdminConsoleModal: React.FC<AdminConsoleModalProps> = ({
           {/* TAB 1: BLUEPRINT TO GRAPH EXTRACTOR */}
           {activeTab === 'blueprint' && (
             <div className="space-y-4">
-              <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+              <div className="rounded-2xl border border-blue-200 bg-blue-50 p-4">
                 <h3 className="text-sm font-bold text-blue-900 flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-amber-500" />
+                  <Sparkles className="h-4 w-4 text-amber-500" />
                   Gemini Vision Blueprint to Graph Extractor
                 </h3>
                 <p className="text-xs text-blue-800 mt-1 leading-relaxed font-normal">
@@ -253,7 +256,7 @@ export const AdminConsoleModal: React.FC<AdminConsoleModalProps> = ({
 
               {/* Extracted Graph Preview */}
               {extractedData && (
-                <div className="bg-emerald-50/60 border border-emerald-300 rounded-xl p-4 space-y-3">
+                <div className="rounded-2xl border border-emerald-200 bg-emerald-50/70 p-4 space-y-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <CheckCircle className="w-5 h-5 text-emerald-600" />
